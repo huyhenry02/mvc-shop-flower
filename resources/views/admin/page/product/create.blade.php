@@ -76,6 +76,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row mt-3">
+                            <div class="col-4">
+                                <div class="form-group">
+                                    <label for="content">Ảnh sản phẩm<span class="text-danger">*</span></label>
+                                    <input type="file" class="form-control" id="detail_image" name="detail_image"
+                                           accept="image/*" required/>
+                                    <div id="detail_image_preview" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card-action text-end">
@@ -85,4 +95,26 @@
             </form>
         </div>
     </div>
+    <script>
+        function previewImage(input, previewId) {
+            const previewContainer = document.getElementById(previewId);
+            previewContainer.innerHTML = '';
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '150px';
+                    img.className = 'img-thumbnail';
+                    previewContainer.appendChild(img);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('detail_image').addEventListener('change', function () {
+            previewImage(this, 'detail_image_preview');
+        });
+    </script>
 @endsection

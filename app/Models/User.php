@@ -61,4 +61,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+    public static function getAdminEmails(): array
+    {
+        return self::where('role', self::ROLE_ADMIN)->pluck('email')->toArray();
+    }
 }

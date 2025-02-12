@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMail;
+use App\Models\User;
 use Exception;
 use App\Models\Cart;
 use App\Models\Order;
@@ -15,6 +17,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Mail;
 
 class IndexCustomerController extends Controller
 {
@@ -183,6 +186,16 @@ class IndexCustomerController extends Controller
                 $orderDetail->save();
                 $cartItem->delete();
             }
+            $adminEmails = User::getAdminEmails();
+            $dataSendMail = [
+                'order' => $order,
+                'orderDetails' => $order->orderDetails
+            ];
+            Mail::to($adminEmails)->send(new SendMail(
+                $dataSendMail,
+                'new-order',
+                'Bạn có đơn hàng mới'
+            ));
             DB::commit();
             return redirect()->route('customer.showYourOrder');
         } catch (Exception $e) {
