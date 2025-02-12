@@ -16,6 +16,7 @@
                     <thead class="thead-light">
                     <tr>
                         <th scope="col" width="5%">STT</th>
+                        <th scope="col">Mã sản phẩm</th>
                         <th scope="col">Tên</th>
                         <th scope="col">Loại sản phẩm</th>
                         <th scope="col">Giá</th>
@@ -27,6 +28,7 @@
                     @foreach($products as $key => $product)
                         <tr>
                             <td>{{ $key + 1 }}</td>
+                            <td>SP-00{{ $product->id }}</td>
                             <td>{{ $product->name ?? '' }}</td>
                             <td>{{ $product->category->name ?? ''}}</td>
                             <td>{{ number_format($product->price) ?? 0}} VNĐ</td>

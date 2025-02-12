@@ -74,6 +74,7 @@ Route::group([
         Route::get('/detail/{order}', [AdminOrderController::class, 'showDetail'])->name('admin.order.showDetail');
 
         Route::post('/create', [AdminOrderController::class, 'postCreate'])->name('admin.order.postCreate');
+        Route::post('/update/{order}', [AdminOrderController::class, 'postUpdate'])->name('admin.order.postUpdate');
     });
 });
 Route::group([

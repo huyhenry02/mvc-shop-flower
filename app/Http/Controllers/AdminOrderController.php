@@ -89,15 +89,12 @@ class AdminOrderController extends Controller
         }
     }
 
-    public function updateStatus(Order $order, Request $request): RedirectResponse
+    public function postUpdate(Order $order, Request $request): RedirectResponse
     {
         try {
             DB::beginTransaction();
             $input = $request->all();
-            $order->status = $input['status'];
-            if ($input['status'] == Order::STATUS_REJECTED) {
-                $order->reject_reason = $input['reject_reason'];
-            }
+            $order->fill($input);
             $order->save();
             DB::commit();
             return redirect()->route('admin.order.showIndex');

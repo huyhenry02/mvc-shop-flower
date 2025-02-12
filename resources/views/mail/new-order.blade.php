@@ -94,6 +94,7 @@
     <table class="product-table">
         <thead>
         <tr>
+            <th>Mã sản phẩm</th>
             <th>Sản phẩm</th>
             <th>Số lượng</th>
             <th>Giá</th>
@@ -102,6 +103,7 @@
         <tbody>
         @foreach ( $data['orderDetails'] as $item )
             <tr>
+                <td>SP-00{{ $item->product_id }}</td>
                 <td>{{ $item->product?->name }}</td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ number_format($item['sub_total'], 0, ',', '.') }}đ</td>
@@ -112,7 +114,7 @@
 
     <p class="total">Tổng tiền: {{ number_format($data['order']->total, 0, ',', '.') }}đ</p>
 
-    <a href="http://127.0.0.1:8000/" class="btn">🔎 Xem chi tiết đơn hàng</a>
+    <a href="{{ route('admin.order.showDetail', $data['order']->id) }}" class="btn">🔎 Xem chi tiết đơn hàng</a>
 
     <div class="footer">
         <p>Hệ thống quản lý đơn hàng - Vui lòng không trả lời email này.</p>

@@ -9,17 +9,17 @@
     },
     {
         "id":  2,
-        "name": "Nguyễn Văn A",
-        "email":  "nguyen_a@gmail.com",
-        "phone": "0111111112",
-        "role":  "customer",
+        "name": "Cộng tác viên",
+        "email":  "chatgpt.plus1202@gmail.com",
+        "phone": "0222222222",
+        "role":  "admin",
         "password":  "1"
     },
     {
         "id":  3,
-        "name": "Nguyễn Văn B",
-        "email":  "nguyen_b@gmail.com",
-        "phone": "0111111113",
+        "name": "Phạm Thị Thu hoài",
+        "email":  "phamthithuhoai12dbm@gmail.com",
+        "phone": "0333333333",
         "role":  "customer",
         "password":  "1"
     }
