@@ -46,7 +46,7 @@
                                 @endswitch
                             </td>
                             <td class="text-center">
-                                <a href="#"
+                                <a href="{{ route('admin.order.showDetail', $order->id) }}"
                                    class="btn btn-sm btn-secondary">
                                     <i class="fas fa-eye"></i>
                                 </a>

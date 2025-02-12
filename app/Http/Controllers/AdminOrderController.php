@@ -44,6 +44,15 @@ class AdminOrderController extends Controller
         );
     }
 
+    public function showDetail(Order $order): View|Factory|Application
+    {
+        return view('admin.page.order.detail',
+            [
+                'order' => $order
+            ]
+        );
+    }
+
     public function postCreate(Request $request): RedirectResponse
     {
         DB::beginTransaction();
@@ -75,6 +84,24 @@ class AdminOrderController extends Controller
             DB::commit();
             return redirect()->route('admin.order.showIndex');
         } catch (Exception $e) {
+            DB::rollBack();
+            return back()->withInput()->withErrors($e->getMessage());
+        }
+    }
+
+    public function updateStatus(Order $order, Request $request): RedirectResponse
+    {
+        try {
+            DB::beginTransaction();
+            $input = $request->all();
+            $order->status = $input['status'];
+            if ($input['status'] == Order::STATUS_REJECTED) {
+                $order->reject_reason = $input['reject_reason'];
+            }
+            $order->save();
+            DB::commit();
+            return redirect()->route('admin.order.showIndex');
+        }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput()->withErrors($e->getMessage());
         }
