@@ -31,6 +31,7 @@ Route::group([
         Route::get('/', [AdminUserController::class, 'showIndex'])->name('admin.user.showIndex');
         Route::get('/create', [AdminUserController::class, 'showCreate'])->name('admin.user.showCreate');
         Route::get('/update/', [AdminUserController::class, 'showUpdate'])->name('admin.user.showUpdate');
+        Route::get('/search', [AdminUserController::class, 'searchUser'])->name('admin.user.search');
     });
 
     Route::group([

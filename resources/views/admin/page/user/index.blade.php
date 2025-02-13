@@ -5,8 +5,12 @@
     >
         <div class="w-100">
             <h3 class="fw-bold mb-3">Danh sách Người dùng</h3>
-        </div>
-        <div class="ms-md-auto py-2 py-md-0">
+            <input
+                type="text"
+                placeholder="Tìm kiếm người dùng"
+                class="form-control search-input w-25"
+                id="search-input"
+            />
         </div>
     </div>
     <div class="row">
@@ -19,7 +23,7 @@
                         <th scope="col">Họ và Tên</th>
                         <th scope="col">Email</th>
                         <th scope="col">Số điện thoại</th>
-                        <th class="text-center" scope="col"></th>
+                        <th scope="col">Số đơn hàng</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -29,22 +33,31 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
-                            <td class="text-center">
-                                <a href="#"
-                                   class="btn btn-sm btn-primary">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <a href="#"
-                                   class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i>
-                                </a>
-                            </td>
+                            <td>{{ $user->orders()->count() ?? '' }}</td>
                         </tr>
                     @endforeach
-
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#search-input').on('change keyup', function () {
+                var query = $('#search-input').val();
+
+                $.ajax({
+                    url: '{{ route('admin.user.search') }}',
+                    method: 'GET',
+                    data: {query: query},
+                    success: function (response) {
+                        $('#user-table tbody').html(response);
+                    },
+                    error: function (error) {
+                        console.error('AJAX Error:', error);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

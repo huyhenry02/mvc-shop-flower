@@ -20,13 +20,15 @@ class AdminUserController extends Controller
         );
     }
 
-    public function showCreate(): View|Factory|Application
+    public function searchUser(Request $request): View|Factory|Application
     {
-        return view('admin.page.user.create');
-    }
+        $query = $request->input('query');
+        $users = User::where('role', User::ROLE_CUSTOMER)
+            ->where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
+            ->orWhere('phone', 'like', '%' . $query . '%')
+            ->get();
 
-    public function showUpdate(): View|Factory|Application
-    {
-        return view('admin.page.user.update');
+        return view('admin.page.user.search-results', compact('users'));
     }
 }

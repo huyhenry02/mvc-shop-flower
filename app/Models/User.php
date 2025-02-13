@@ -66,4 +66,9 @@ class User extends Authenticatable
     {
         return self::where('role', self::ROLE_ADMIN)->pluck('email')->toArray();
     }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
 }
