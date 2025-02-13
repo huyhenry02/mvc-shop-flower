@@ -41,7 +41,10 @@
                             </td>
                             <td>{{ number_format($order['total'], 0, ',', '.') }} VNĐ</td>
                             <td>
-                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderDetailModal" data-order="{{ json_encode($order) }}">Xem Chi Tiết</button>
+                                <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#orderDetailModal"
+                                        data-order="{{ json_encode($order, JSON_THROW_ON_ERROR) }}">Xem Chi Tiết
+                                </button>
                             </td>
                         </tr>
                     @endforeach
@@ -52,7 +55,8 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel" aria-hidden="true">
+    <div class="modal fade" id="orderDetailModal" tabindex="-1" aria-labelledby="orderDetailModalLabel"
+         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">

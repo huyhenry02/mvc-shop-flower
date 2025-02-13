@@ -19,15 +19,23 @@
                     <div class="row g-4">
                         <div class="col-lg-6">
                             <div class="border rounded">
-                                <a href="#">
-                                    <img src="{{ $product->detail_image ?? '' }}" class="img-fluid rounded" alt="Image">
-                                </a>
+                                    <img src="{{ $product->detail_image ?? '' }}" class="img-fluid rounded" alt="Image" id="mainImage">
+                            </div>
+                            <div class="d-flex mt-3">
+                                <img src="{{ $product->detail_image_1 ?? $product->detail_image }}" class="img-thumbnail me-2 small-img" style="width: 80px; cursor: pointer;" onclick="changeImage(this)" alt="">
+                                <img src="{{ $product->detail_image_2 ?? $product->detail_image }}" class="img-thumbnail me-2 small-img" style="width: 80px; cursor: pointer;" onclick="changeImage(this)" alt="">
+                                <img src="{{ $product->detail_image_3 ?? $product->detail_image }}" class="img-thumbnail me-2 small-img" style="width: 80px; cursor: pointer;" onclick="changeImage(this)" alt="">
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <h4 class="fw-bold mb-3">{{ $product->name ?? '' }}</h4>
                             <p class="mb-3">Danh mục: {{ $product->category?->name ?? '' }}</p>
                             <h5 class="fw-bold mb-3">{{ number_format($product->price) ?? 0}} VNĐ</h5>
+                            <div class="mb-3">
+                                @foreach(explode(',', $product->tags) as $tag)
+                                    <span class="badge bg-primary">{{ trim($tag) }}</span>
+                                @endforeach
+                            </div>
                             <div class="d-flex mb-4">
                                 <i class="fa fa-star text-secondary"></i>
                                 <i class="fa fa-star text-secondary"></i>
@@ -192,6 +200,9 @@
     </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function changeImage(element) {
+            document.getElementById('mainImage').src = element.src;
+        }
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.btn-plus').forEach(function (btnPlus) {
                 btnPlus.addEventListener('click', function (e) {

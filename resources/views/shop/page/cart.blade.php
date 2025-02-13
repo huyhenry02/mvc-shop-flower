@@ -26,7 +26,7 @@
                         <tr>
                             <th scope="row">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $cartItem->product?->feature_image ?? '' }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
+                                    <img src="{{ $cartItem->product?->detail_image ?? '' }}" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                 </div>
                             </th>
                             <td>
