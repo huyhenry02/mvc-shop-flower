@@ -1,53 +1,62 @@
 [
     {
+        "code": "SP-001",
         "category_id": 1,
         "name": "Hoa Hồng Đỏ Tươi",
         "description": "Hoa hồng đỏ tươi với hương thơm ngọt ngào, phù hợp cho các dịp đặc biệt.",
         "price": 150000
     },
     {
+        "code": "SP-002",
         "category_id": 2,
         "name": "Bó Hoa Hồng",
         "description": "Bó hoa hồng kết hợp với giấy gói truyền thống, mang vẻ đẹp cổ điển.",
         "price": 250000
     },
     {
+        "code": "SP-003",
         "category_id": 3,
         "name": "Lẵng Hoa Khai Trương",
         "description": "Lẵng hoa chúc mừng khai trương với hoa đồng tiền, hoa lan và các phụ kiện đẹp mắt.",
         "price": 500000
     },
     {
+        "code": "SP-004",
         "category_id": 4,
         "name": "Hoa Cưới Cầm Tay Tulip",
         "description": "Bó hoa tulip trắng tinh khôi dành riêng cho cô dâu trong ngày trọng đại.",
         "price": 700000
     },
     {
+        "code": "SP-005",
         "category_id": 5,
         "name": "Bó Hoa Sinh Nhật Độc Đáo",
         "description": "Bó hoa kết hợp các loại hoa nhiều màu sắc, mang thông điệp yêu thương.",
         "price": 350000
     },
     {
+        "code": "SP-006",
         "category_id": 6,
         "name": "Hoa Chúc Mừng Tốt Nghiệp",
         "description": "Hoa tươi đa dạng với màu sắc rực rỡ, thích hợp cho ngày tốt nghiệp.",
         "price": 400000
     },
     {
+        "code": "SP-007",
         "category_id": 7,
         "name": "Vòng Hoa Tang Lễ",
         "description": "Vòng hoa chia buồn với thiết kế trang nghiêm, thể hiện sự kính trọng.",
         "price": 600000
     },
     {
+        "code": "SP-008",
         "category_id": 8,
         "name": "Hoa Tulip Nhập Khẩu",
         "description": "Hoa tulip nhập khẩu từ Hà Lan với màu sắc phong phú.",
         "price": 450000
     },
     {
+        "code": "SP-009",
         "category_id": 9,
         "name": "Cây Sen Đá Mini",
         "description": "Cây sen đá nhỏ gọn, phù hợp để bàn làm việc hoặc trang trí.",

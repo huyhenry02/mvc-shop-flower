@@ -11,7 +11,6 @@
     </div>
     <!-- Single Page Header End -->
 
-
     <!-- Single Product Start -->
     <div class="container-fluid py-5 mt-5">
         <div class="container py-5">
@@ -155,7 +154,7 @@
                             <h4 class="mb-4">Sản phẩm nổi bật</h4>
                             <div class="d-flex align-items-center justify-content-start">
                                 <div class="rounded" style="width: 100px; height: 100px;">
-                                    <img src="img/featur-1.jpg" class="img-fluid rounded" alt="Image">
+                                    <img src="{{ $product->detail_image ?? '' }}" class="img-fluid rounded" alt="Image">
                                 </div>
                                 <div>
                                     <h6 class="mb-2">Big Banana</h6>

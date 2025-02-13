@@ -18,7 +18,7 @@
                         <th scope="col" width="5%">STT</th>
                         <th scope="col">Tên</th>
                         <th scope="col">Mô tả</th>
-                        <th class="text-center" scope="col"></th>
+                        <th class="text-center" scope="col" width="10%"></th>
                     </tr>
                     </thead>
                     <tbody>

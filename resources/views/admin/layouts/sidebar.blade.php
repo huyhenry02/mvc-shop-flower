@@ -19,11 +19,6 @@
                                 <span class="sub-item">Danh sách người dùng</span>
                             </a>
                         </li>
-                        <li class="">
-                            <a href="{{ route('admin.user.showCreate') }}">
-                                <span class="sub-item">Thêm mới người dùng</span>
-                            </a>
-                        </li>
                     </ul>
                 </div>
             </li>
@@ -48,32 +43,6 @@
                         <li class="">
                             <a href="{{ route('admin.category.showCreate') }}">
                                 <span class="sub-item">Thêm mới danh mục</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="nav-item">
-                <a
-                    data-bs-toggle="collapse"
-                    href="#tag"
-                    class="collapsed"
-                    aria-expanded="false"
-                >
-                    <i class="fas fa-bars"></i>
-                    <p>Quản lý thẻ</p>
-                    <span class="caret"></span>
-                </a>
-                <div class="collapse show" id="tag">
-                    <ul class="nav nav-collapse">
-                        <li class="">
-                            <a href="{{ route('admin.tag.showIndex') }}">
-                                <span class="sub-item">Danh sách thẻ</span>
-                            </a>
-                        </li>
-                        <li class="">
-                            <a href="{{ route('admin.tag.showCreate') }}">
-                                <span class="sub-item">Thêm mới thẻ</span>
                             </a>
                         </li>
                     </ul>

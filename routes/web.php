@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminTagController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminProductController;
@@ -29,8 +28,6 @@ Route::group([
         'prefix' => 'user'
     ], function () {
         Route::get('/', [AdminUserController::class, 'showIndex'])->name('admin.user.showIndex');
-        Route::get('/create', [AdminUserController::class, 'showCreate'])->name('admin.user.showCreate');
-        Route::get('/update/', [AdminUserController::class, 'showUpdate'])->name('admin.user.showUpdate');
         Route::get('/search', [AdminUserController::class, 'searchUser'])->name('admin.user.search');
     });
 
@@ -40,18 +37,8 @@ Route::group([
         Route::get('/', [AdminProductController::class, 'showIndex'])->name('admin.product.showIndex');
         Route::get('/create', [AdminProductController::class, 'showCreate'])->name('admin.product.showCreate');
         Route::get('/update/', [AdminProductController::class, 'showUpdate'])->name('admin.product.showUpdate');
-    });
 
-    Route::group([
-        'prefix' => 'tag'
-    ], function () {
-        Route::get('/', [AdminTagController::class, 'showIndex'])->name('admin.tag.showIndex');
-        Route::get('/create', [AdminTagController::class, 'showCreate'])->name('admin.tag.showCreate');
-        Route::get('/update/{tag}', [AdminTagController::class, 'showUpdate'])->name('admin.tag.showUpdate');
-
-        Route::post('/create', [AdminTagController::class, 'postCreate'])->name('admin.tag.postCreate');
-        Route::post('/update/{tag}', [AdminTagController::class, 'postUpdate'])->name('admin.tag.postUpdate');
-        Route::get('/delete/{tag}', [AdminTagController::class, 'delete'])->name('admin.tag.delete');
+        Route::post('/create', [AdminProductController::class, 'postCreate'])->name('admin.product.postCreate');
     });
 
     Route::group([

@@ -18,13 +18,12 @@ class ProductsSeeder extends Seeder
 
         foreach ($data as $item) {
             Product::create([
+                'code' => $item->code,
                 'category_id' => $item->category_id,
                 'name' => $item->name,
                 'description' => $item->description,
                 'price' => $item->price,
                 'detail_image' => '/shop/img/single-item.jpg',
-                'feature_image' => '/shop/img/featur-3.jpg',
-                'list_image' => '/shop/img/fruite-item-5.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

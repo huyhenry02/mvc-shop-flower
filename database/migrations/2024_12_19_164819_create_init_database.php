@@ -22,35 +22,19 @@ return new class extends Migration
         // Products table
         Schema::create('products', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->string('code')->nullable();
             $table->string('name');
             $table->unsignedBigInteger('category_id');
             $table->integer('price');
             $table->string('description')->nullable();
-            $table->string('detail_image');
-            $table->string('feature_image')->nullable();
-            $table->string('list_image')->nullable();
+            $table->text('tags')->nullable();
+            $table->string('detail_image')->nullable();
+            $table->string('detail_image_1')->nullable();
+            $table->string('detail_image_2')->nullable();
+            $table->string('detail_image_3')->nullable();
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-        });
-
-        // Tags table
-        Schema::create('tags', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('background_color');
-            $table->timestamps();
-        });
-
-        // Product_Tag table
-        Schema::create('product_tag', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('tag_id');
-            $table->timestamps();
-
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('tag_id')->references('id')->on('tags')->onDelete('cascade');
         });
 
         // Orders table
@@ -107,8 +91,6 @@ return new class extends Migration
         Schema::dropIfExists('carts');
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('orders');
-        Schema::dropIfExists('product_tag');
-        Schema::dropIfExists('tags');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
     }

@@ -21,7 +21,7 @@
                         <th scope="col">Ngày đặt</th>
                         <th scope="col">Tổng tiền</th>
                         <th scope="col">Trạng thái</th>
-                        <th class="text-center" scope="col"></th>
+                        <th class="text-center" scope="col" width="10%"></th>
                     </tr>
                     </thead>
                     <tbody>
