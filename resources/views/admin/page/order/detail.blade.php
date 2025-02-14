@@ -183,7 +183,6 @@
             console.warn("Không tìm thấy nút xác nhận hủy (#confirmReject).");
         }
 
-        // Cập nhật trạng thái đơn hàng khác
         const updateButtons = document.querySelectorAll('.update-order');
         if (updateButtons.length > 0) {
             updateButtons.forEach(button => {
