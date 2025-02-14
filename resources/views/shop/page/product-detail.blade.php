@@ -32,7 +32,7 @@
                             <p class="mb-3">Danh mục: {{ $product->category?->name ?? '' }}</p>
                             <h5 class="fw-bold mb-3">{{ number_format($product->price) ?? 0}} VNĐ</h5>
                             <div class="mb-3">
-                                @foreach(explode(',', $product->tags) as $tag)
+                                @foreach( explode(',', $product->tags) as $tag )
                                     <span class="badge bg-primary">{{ trim($tag) }}</span>
                                 @endforeach
                             </div>

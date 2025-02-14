@@ -103,7 +103,7 @@
         <tbody>
         @foreach ( $data['orderDetails'] as $item )
             <tr>
-                <td>SP-00{{ $item->product_id }}</td>
+                <td>SP-00{{ $item->code }}</td>
                 <td>{{ $item->product?->name }}</td>
                 <td>{{ $item->quantity }}</td>
                 <td>{{ number_format($item['sub_total'], 0, ',', '.') }}đ</td>
@@ -120,6 +120,5 @@
         <p>Hệ thống quản lý đơn hàng - Vui lòng không trả lời email này.</p>
     </div>
 </div>
-
 </body>
 </html>
