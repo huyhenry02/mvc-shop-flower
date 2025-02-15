@@ -70,6 +70,18 @@ class AdminProductController extends Controller
         }
     }
 
+    public function getDelete($id){
+        DB::beginTransaction();
+        try {
+            Product::where('id', $id)->delete();
+            DB::commit();
+            return redirect()->route('admin.product.showIndex')->with('deleteProduct', "Bạn đã xoá sản phẩm thành công!!");
+        }catch (Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage());
+        }
+    }
+
     private function handleUploadFile($file, $model, $type): string
     {
         $fileName = $type . '_' . $model->id . '.' . $file->getClientOriginalExtension();
