@@ -38,6 +38,7 @@ Route::group([
         Route::get('/create', [AdminProductController::class, 'showCreate'])->name('admin.product.showCreate');
         Route::get('/update/', [AdminProductController::class, 'showUpdate'])->name('admin.product.showUpdate');
         Route::get('/delete/{id}', [AdminProductController::class, 'getDelete'])->name('admin.product.getDelete');
+        Route::get('/search', [AdminProductController::class, 'searchProduct'])->name('admin.product.search');
 
         Route::post('/create', [AdminProductController::class, 'postCreate'])->name('admin.product.postCreate');
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Exception;
 use App\Models\Tag;
 use App\Models\Product;
@@ -80,6 +81,17 @@ class AdminProductController extends Controller
             DB::rollBack();
             dd($e->getMessage());
         }
+    }
+
+    public function searchProduct(Request $request): View|Factory|Application
+    {
+        $query = $request->input('query');
+
+        $products = Product::where('name', 'like', '%' . $query . '%')
+            ->orWhere('price', 'like', '%' . $query . '%')
+            ->get();
+
+        return view('admin.page.product.search-results', compact('products'));
     }
 
     private function handleUploadFile($file, $model, $type): string
