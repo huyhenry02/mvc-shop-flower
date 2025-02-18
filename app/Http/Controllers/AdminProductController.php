@@ -88,6 +88,9 @@ class AdminProductController extends Controller
         $query = $request->input('query');
 
         $products = Product::where('name', 'like', '%' . $query . '%')
+            ->orWhereHas('category', function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%');
+            })
             ->orWhere('price', 'like', '%' . $query . '%')
             ->get();
 
