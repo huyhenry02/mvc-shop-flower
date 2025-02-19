@@ -83,4 +83,5 @@ Route::group([
     Route::get('/remove-cart-item/{cart}', [IndexCustomerController::class, 'removeCartItem'])->name('customer.removeCartItem');
     Route::post('/update-quantity', [IndexCustomerController::class, 'updateQuantity'])->name('customer.updateQuantity');
     Route::post('/checkout', [IndexCustomerController::class, 'postCheckout'])->name('customer.postCheckout');
+    Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts');
 });

@@ -29,7 +29,7 @@ class IndexCustomerController extends Controller
     public function showProducts(): View|Factory|Application
     {
         $categories = Category::all();
-        $products = Product::all();
+        $products = Product::paginate(9);
         return view('shop.page.products',
             [
                 'categories' => $categories,
@@ -201,6 +201,43 @@ class IndexCustomerController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return redirect()->route('customer.showCart')->with('error', $e->getMessage());
+        }
+    }
+
+    public function filterProducts(Request $request): Factory|View|Application|RedirectResponse
+    {
+        try {
+            $query = Product::query();
+
+            if ($request->has('categories') && !empty($request->categories)) {
+                $query->whereIn('category_id', $request->categories);
+            }
+
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('description', 'LIKE', '%' . $request->search . '%')
+                    ->orWhere('tags', 'LIKE', '%' . $request->search . '%');
+            }
+
+            if ($request->has('sort_by') && !empty($request->sort_by)) {
+                if ($request->sort_by === 'asc') {
+                    $query->orderBy('price');
+                } elseif ($request->sort_by === 'desc') {
+                    $query->orderBy('price', 'desc');
+                } elseif ($request->sort_by === 'max') {
+                    $query->leftJoin('order_details', 'products.id', '=', 'order_details.product_id')
+                        ->selectRaw('products.*, sum(order_details.quantity) as total_quantity')
+                        ->groupBy('products.id')
+                        ->orderBy('total_quantity', 'desc');
+                }
+            }
+
+            $products = $query->paginate(9);
+            return view('shop.page.products', [
+                'products' => $products
+            ]);
+        }catch (Exception $e) {
+            return redirect()->route('customer.showProducts')->with('error', $e->getMessage());
         }
     }
 
