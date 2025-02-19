@@ -9,6 +9,11 @@
         <div class="ms-md-auto py-2 py-md-0">
         </div>
     </div>
+    @if (Session::has('deleteProduct'))
+        <div class="alert alert-success">
+            {{ Session::get('deleteProduct') }}
+        </div>
+    @endif
     <div class="row">
         <div class="col-12">
             <div class="card card-stats card-round">
@@ -44,8 +49,8 @@
                                    class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>
-                                <a href="#"
-                                   class="btn btn-sm btn-danger">
+                                <a href="{{route("admin.product.getDelete", $product->id)}}"
+                                   class="btn btn-sm btn-danger" onClick = 'return confirm("Bạn có chắc chắn muốn xoá không?")'>
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>
