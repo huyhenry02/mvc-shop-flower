@@ -63,6 +63,7 @@ Route::group([
         Route::get('/create', [AdminOrderController::class, 'showCreate'])->name('admin.order.showCreate');
         Route::get('/update/{order}', [AdminOrderController::class, 'showUpdate'])->name('admin.order.showUpdate');
         Route::get('/detail/{order}', [AdminOrderController::class, 'showDetail'])->name('admin.order.showDetail');
+        Route::get('/search', [AdminOrderController::class, 'getSearch'])->name('admin.order.getSearch');
 
         Route::post('/create', [AdminOrderController::class, 'postCreate'])->name('admin.order.postCreate');
         Route::post('/update/{order}', [AdminOrderController::class, 'postUpdate'])->name('admin.order.postUpdate');

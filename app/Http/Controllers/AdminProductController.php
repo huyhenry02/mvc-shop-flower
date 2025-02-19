@@ -19,9 +19,11 @@ class AdminProductController extends Controller
     public function showIndex(): View|Factory|Application
     {
         $products = Product::all();
+        $categories = Category::all();
         return view('admin.page.product.index',
             [
-                'products' => $products
+                'products' => $products,
+                'categories' => $categories
             ]);
     }
 
@@ -85,15 +87,19 @@ class AdminProductController extends Controller
 
     public function searchProduct(Request $request): View|Factory|Application
     {
-        $query = $request->input('query');
-
-        $products = Product::where('name', 'like', '%' . $query . '%')
-            ->orWhereHas('category', function ($q) use ($query) {
-                $q->where('name', 'like', '%' . $query . '%');
-            })
-            ->orWhere('price', 'like', '%' . $query . '%')
-            ->get();
-
+        $queryInput = $request->input('queryInput');
+        $querySelectOption = $request->input('querySelectOption');
+        $products = Product::query();
+        if (!empty($querySelectOption)) {
+            $products->where('category_id', $querySelectOption);
+        }
+        if (!empty($queryInput)) {
+            $products->where(function ($query) use ($queryInput) {
+                $query->where('name', 'like', '%' . $queryInput . '%')
+                    ->orWhere('price', 'like', '%' . $queryInput . '%');
+            });
+        }
+        $products = $products->get();
         return view('admin.page.product.search-results', compact('products'));
     }
 

@@ -5,12 +5,24 @@
     >
         <div class="w-100">
             <h3 class="fw-bold mb-3">Danh sách sản phẩm</h3>
-            <input
-                type="text"
-                placeholder="Tìm kiếm sản phẩm"
-                class="form-control search-input w-25"
-                id="search-input"
-            />
+            <div class="d-flex">
+                <input
+                    type="text"
+                    placeholder="Tìm kiếm sản phẩm"
+                    class="form-control search-input w-25"
+                    id="search-input"
+                />
+                <div class="input-group">
+                    <select class="form-select" id="categories-id" name="category_id">
+                        <option value="" selected>Loại sản phẩm</option>
+                        @foreach($categories as $category)
+                            <option id="category-id" value="{{$category->id}}">{{$category->name}}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+
+
         </div>
         <div class="ms-md-auto py-2 py-md-0">
         </div>
@@ -69,13 +81,17 @@
     </div>
     <script>
         $(document).ready(function () {
-            $('#search-input').on('change keyup', function () {
-                var query = $('#search-input').val();
+            function fetchProducts() {
+                var queryInput = $('#search-input').val();
+                var querySelectOption = $('#categories-id').val();
 
                 $.ajax({
                     url: '{{ route('admin.product.search') }}',
                     method: 'GET',
-                    data: {query: query},
+                    data: {
+                        queryInput: queryInput,
+                        querySelectOption: querySelectOption
+                    },
                     success: function (response) {
                         $('#product-table tbody').html(response);
                     },
@@ -83,6 +99,12 @@
                         console.error('AJAX Error:', error);
                     }
                 });
+            }
+            $('#search-input').on('change keyup', function () {
+                fetchProducts(); // Gọi hàm tìm kiếm khi nhập text
+            });
+            $('#categories-id').on('change', function () {
+                fetchProducts(); // Gọi hàm tìm kiếm khi chọn danh mục
             });
         });
     </script>

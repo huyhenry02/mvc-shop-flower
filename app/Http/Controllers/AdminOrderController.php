@@ -147,4 +147,23 @@ class AdminOrderController extends Controller
             ]);
         }
     }
+    public function getSearch(Request $request)
+    {
+        try {
+            $query = $request->input('query');
+            $orders = Order::where('total', 'like', '%' . $query . '%')
+                            ->orWhere('order_date', 'like', '%' . $query . '%')
+                            ->orWhere('code', 'like', '%' . $query . '%')
+                            ->orWhereHas('user', function ($q) use ($query) {
+                                $q->where('name', 'like', '%' . $query . '%');
+                            })
+                            ->get();
+            DB::commit();
+            return view('admin.page.order.search-results',compact('orders'));
+        }catch(Exception $e){
+            DB::rollBack();
+            return back()->withInput()->withErrors($e->getMessage());
+        }
+    }
 }
+
