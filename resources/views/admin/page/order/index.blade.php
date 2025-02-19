@@ -1,3 +1,4 @@
+@php use App\Models\Order; @endphp
 @extends('admin.layouts.main')
 @section('content')
     <div
@@ -33,17 +34,7 @@
                             <td>{{ $order->order_date }}</td>
                             <td>{{ number_format($order->total, 0, ',', '.') }} VNĐ</td>
                             <td>
-                                @switch($order->status)
-                                    @case(\App\Models\Order::STATUS_PENDING)
-                                    <span class="badge bg-warning">Chờ xác nhận</span>
-                                    @break
-                                    @case(\App\Models\Order::STATUS_SHIPPING)
-                                    <span class="badge bg-info">Đang giao hàng</span>
-                                    @break
-                                    @case(\App\Models\Order::STATUS_COMPLETED)
-                                    <span class="badge bg-success">Giao hàng thành công</span>
-                                    @break
-                                @endswitch
+                                <span class="status {{$order->status}}">{{ Order::STATUS_LABELS[$order->status] }}</span>
                             </td>
                             <td class="text-center">
                                 <a href="{{ route('admin.order.showDetail', $order->id) }}"
@@ -62,4 +53,25 @@
             </div>
         </div>
     </div>
+    <style>
+        .status.pending {
+            color: #ffc107;
+        }
+
+        .status.approved {
+            color: #17a2b8;
+        }
+
+        .status.shipping {
+            color: #4a63ff;
+        }
+
+        .status.completed {
+            color: #28a745;
+        }
+
+        .status.rejected {
+            color: #dc3545;
+        }
+    </style>
 @endsection

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendMail;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
@@ -9,9 +10,11 @@ use Exception;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class AdminOrderController extends Controller
 {
@@ -101,6 +104,47 @@ class AdminOrderController extends Controller
         }catch (Exception $e) {
             DB::rollBack();
             return back()->withInput()->withErrors($e->getMessage());
+        }
+    }
+
+    public function updateStatus(Request $request, Order $order): JsonResponse
+    {
+        try {
+            $input = $request->all();
+            if ($input['status'] === 'rejected' && empty($input['reject_reason'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Lý do hủy đơn hàng không được để trống.'
+                ]);
+            }
+
+            $order->status = $input['status'];
+
+            if ($input['status'] === 'rejected') {
+                $order->reject_reason = $input['reject_reason'];
+            }
+            $order->fill($input);
+            $order->save();
+
+            $dataSendMail = [
+                'order' => $order,
+                'orderDetails' => $order->orderDetails
+            ];
+            Mail::to([$order->user?->email, $order->shipping_email])->send(new SendMail(
+                $dataSendMail,
+                'update-status-order',
+                'Thông báo trạng thái đơn hàng'
+            ));
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật trạng thái đơn hàng thành công.'
+            ]);
+
+        }catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
     }
 }

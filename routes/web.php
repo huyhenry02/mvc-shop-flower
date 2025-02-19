@@ -66,6 +66,7 @@ Route::group([
 
         Route::post('/create', [AdminOrderController::class, 'postCreate'])->name('admin.order.postCreate');
         Route::post('/update/{order}', [AdminOrderController::class, 'postUpdate'])->name('admin.order.postUpdate');
+        Route::post('/update-status/{order}', [AdminOrderController::class, 'updateStatus'])->name('admin.order.updateStatus');
     });
 });
 Route::group([

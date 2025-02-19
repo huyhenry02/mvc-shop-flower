@@ -21,17 +21,7 @@
                     <p><strong>Mã đơn hàng:</strong> {{ $order->code }}</p>
                     <p><strong>Ngày đặt:</strong> {{ $order->order_date }}</p>
                     <p><strong>Trạng thái:</strong>
-                        @switch($order->status)
-                            @case(Order::STATUS_PENDING)
-                                <span class="badge bg-warning">Chờ xác nhận</span>
-                                @break
-                            @case(Order::STATUS_SHIPPING)
-                                <span class="badge bg-info">Đang giao hàng</span>
-                                @break
-                            @case(Order::STATUS_COMPLETED)
-                                <span class="badge bg-success">Giao hàng thành công</span>
-                                @break
-                        @endswitch
+                        <span class="status {{$order->status}}">{{ Order::STATUS_LABELS[$order->status] }}</span>
                     </p>
                     <p><strong>Ghi chú:</strong> {{ $order->note ?? 'Không có ghi chú' }}</p>
                 </div>
@@ -85,12 +75,158 @@
             </div>
         </div>
     </div>
-
     <div class="mt-4 text-center">
-        <form action="#" method="POST">
-            <button type="submit" name="status" value="completed" class="btn btn-success me-2">✅ Xác nhận hoàn tất
-            </button>
-            <button type="submit" name="status" value="cancelled" class="btn btn-danger">❌ Hủy đơn hàng</button>
-        </form>
+        @switch( $order->status )
+            @case( Order::STATUS_PENDING)
+                <button data-order-id="{{ $order->id }}" value="approved" class="btn btn-primary update-order me-2">✅ Xác nhận đơn hàng</button>
+                <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
+                @break
+            @case( Order::STATUS_APPROVED)
+                <button data-order-id="{{ $order->id }}" value="shipping" class="btn btn-secondary update-order me-2">✅ Đơn hàng đã được giao</button>
+                <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
+                @break
+            @case( Order::STATUS_SHIPPING)
+                <button data-order-id="{{ $order->id }}" value="completed" class="btn btn-success update-order me-2">✅ Giao hàng thành công</button>
+                <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
+                @break
+        @endswitch
     </div>
+
+    <div id="rejectOrderModal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Lý do hủy đơn hàng</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <textarea id="rejectReason" class="form-control" placeholder="Nhập lý do hủy đơn hàng..." rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" id="confirmReject">Xác nhận hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .status.pending {
+            color: #ffc107;
+        }
+
+        .status.approved {
+            color: #17a2b8;
+        }
+
+        .status.shipping {
+            color: #4a63ff;
+        }
+
+        .status.completed {
+            color: #28a745;
+        }
+
+        .status.rejected {
+            color: #dc3545;
+        }
+    </style>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let orderIdToReject = null;
+
+        const rejectButtons = document.querySelectorAll('.reject-order');
+        if (rejectButtons.length > 0) {
+            rejectButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    orderIdToReject = this.getAttribute('data-order-id');
+                    const modal = document.getElementById('rejectOrderModal');
+                    if (modal) {
+                        new bootstrap.Modal(modal).show();
+                    } else {
+                        console.error("Không tìm thấy modal #rejectOrderModal");
+                    }
+                });
+            });
+        } else {
+            console.warn("Không tìm thấy bất kỳ nút .reject-order nào trên trang.");
+        }
+
+        const confirmRejectBtn = document.getElementById('confirmReject');
+        if (confirmRejectBtn) {
+            confirmRejectBtn.addEventListener('click', function () {
+                const reasonInput = document.getElementById('rejectReason');
+                if (!reasonInput) {
+                    console.error("Không tìm thấy input lý do hủy đơn hàng.");
+                    return;
+                }
+
+                const reason = reasonInput.value.trim();
+                if (!reason) {
+                    alert("Vui lòng nhập lý do hủy!");
+                    return;
+                }
+
+                if (!orderIdToReject) {
+                    console.error("Không tìm thấy ID đơn hàng để hủy.");
+                    return;
+                }
+
+                fetch(`/admin/order/update-status/${orderIdToReject}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        status: 'rejected',
+                        reject_reason: reason
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert(data.message);
+                        if (data.success) location.reload();
+                    })
+                    .catch(error => console.error('Lỗi:', error));
+            });
+        } else {
+            console.warn("Không tìm thấy nút xác nhận hủy (#confirmReject).");
+        }
+
+        const updateButtons = document.querySelectorAll('.update-order');
+        if (updateButtons.length > 0) {
+            updateButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const orderId = this.getAttribute('data-order-id');
+                    const status = this.value;
+
+                    if (!orderId) {
+                        console.error("Không tìm thấy ID đơn hàng để cập nhật.");
+                        return;
+                    }
+
+                    fetch(`/admin/order/update-status/${orderId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        },
+                        body: JSON.stringify({ status })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            alert(data.message);
+                            if (data.success) location.reload();
+                        })
+                        .catch(error => console.error('Lỗi:', error));
+                });
+            });
+        } else {
+            console.warn("Không tìm thấy bất kỳ nút .update-order nào trên trang.");
+        }
+    });
+
+</script>
 @endsection
