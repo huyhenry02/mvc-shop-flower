@@ -49,23 +49,23 @@
         }
 
         .status.pending {
-            background: #ffc107;
+            color: #ffc107;
         }
 
         .status.approved {
-            background: #17a2b8;
+            color: #17a2b8;
         }
 
         .status.shipping {
-            background: #4a63ff;
+            color: #4a63ff;
         }
 
         .status.completed {
-            background: #28a745;
+            color: #28a745;
         }
 
         .status.rejected {
-            background: #dc3545;
+            color: #dc3545;
         }
 
         .message {
@@ -138,10 +138,11 @@
     <div class="order-info">
         <p><strong>Mã đơn hàng:</strong> {{ $data['order']->code }}</p>
         <p><strong>Ngày đặt:</strong> {{ $data['order']->created_at ->format('d/m/Y H:i') }}</p>
-        <p><strong>Trạng thái:</strong></p>
-        <div class="status {{ strtolower($data['order']->status ) }}">
-            {{ ucfirst($data['order']->status ) }}
-        </div>
+        <p><strong>Trạng thái:</strong>
+            <span class="status {{ strtolower($data['order']->status ) }}">
+                {{ Order::STATUS_LABELS[$data['order']->status] }}
+            </span>
+        </p>
         @switch($data['order']->status )
             @case( Order::STATUS_PENDING)
                 <p class="message">

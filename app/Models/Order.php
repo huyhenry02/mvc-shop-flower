@@ -21,6 +21,14 @@ class Order extends Model
         self::STATUS_COMPLETED,
         self::STATUS_REJECTED,
     ];
+
+    public const STATUS_LABELS = [
+        self::STATUS_PENDING => 'Chờ xác nhận',
+        self::STATUS_APPROVED => 'Đã xác nhận',
+        self::STATUS_SHIPPING => 'Đang giao hàng',
+        self::STATUS_COMPLETED => 'Hoàn thành',
+        self::STATUS_REJECTED => 'Đã từ chối',
+    ];
     protected $table = 'orders';
     protected $fillable = [
         'code',

@@ -21,17 +21,7 @@
                     <p><strong>Mã đơn hàng:</strong> {{ $order->code }}</p>
                     <p><strong>Ngày đặt:</strong> {{ $order->order_date }}</p>
                     <p><strong>Trạng thái:</strong>
-                        @switch($order->status)
-                            @case(Order::STATUS_PENDING)
-                                <span class="badge bg-warning">Chờ xác nhận</span>
-                                @break
-                            @case(Order::STATUS_SHIPPING)
-                                <span class="badge bg-info">Đang giao hàng</span>
-                                @break
-                            @case(Order::STATUS_COMPLETED)
-                                <span class="badge bg-success">Giao hàng thành công</span>
-                                @break
-                        @endswitch
+                        <span class="status {{$order->status}}">{{ Order::STATUS_LABELS[$order->status] }}</span>
                     </p>
                     <p><strong>Ghi chú:</strong> {{ $order->note ?? 'Không có ghi chú' }}</p>
                 </div>
@@ -87,14 +77,15 @@
     </div>
     <div class="mt-4 text-center">
         @switch( $order->status )
-            @case(Order::STATUS_PENDING)
+            @case( Order::STATUS_PENDING)
                 <button data-order-id="{{ $order->id }}" value="approved" class="btn btn-primary update-order me-2">✅ Xác nhận đơn hàng</button>
                 <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
                 @break
-            @case(Order::STATUS_APPROVED)
+            @case( Order::STATUS_APPROVED)
                 <button data-order-id="{{ $order->id }}" value="shipping" class="btn btn-secondary update-order me-2">✅ Đơn hàng đã được giao</button>
                 <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
-            @case(Order::STATUS_SHIPPING)
+                @break
+            @case( Order::STATUS_SHIPPING)
                 <button data-order-id="{{ $order->id }}" value="completed" class="btn btn-success update-order me-2">✅ Giao hàng thành công</button>
                 <button data-order-id="{{ $order->id }}" class="btn btn-danger reject-order me-2">❌ Hủy đơn hàng</button>
                 @break
@@ -120,6 +111,27 @@
             </div>
         </div>
     </div>
+    <style>
+        .status.pending {
+            color: #ffc107;
+        }
+
+        .status.approved {
+            color: #17a2b8;
+        }
+
+        .status.shipping {
+            color: #4a63ff;
+        }
+
+        .status.completed {
+            color: #28a745;
+        }
+
+        .status.rejected {
+            color: #dc3545;
+        }
+    </style>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let orderIdToReject = null;

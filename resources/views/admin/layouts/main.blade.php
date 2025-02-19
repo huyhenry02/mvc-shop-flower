@@ -12,7 +12,7 @@
         href="/assets/img/kaiadmin/favicon.ico"
         type="image/x-icon"
     />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Fonts and icons -->
     <script src="/assets/js/plugin/webfont/webfont.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
