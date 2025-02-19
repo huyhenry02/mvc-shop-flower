@@ -46,10 +46,13 @@
                                             @foreach( $categories as $category )
                                                 <li class="category-item">
                                                     <label class="category-label">
-                                                        <input class="form-check-input category-checkbox" id="category_id" type="checkbox" value="{{ $category->id }}">
+                                                        <input class="form-check-input category-checkbox"
+                                                               id="category_id" type="checkbox"
+                                                               value="{{ $category->id }}">
                                                         <span class="category-name">{{ $category->name ?? '' }}</span>
                                                     </label>
-                                                    <span class="category-count">{{ $category->products()->count() ?? 0 }}</span>
+                                                    <span
+                                                        class="category-count">{{ $category->products()->count() ?? 0 }}</span>
                                                 </li>
                                             @endforeach
                                         </ul>
@@ -143,7 +146,7 @@
                             </div>
                         </div>
                         <div class="col-lg-9">
-                            <div class="row g-4 justify-content-center">
+                            <div class="row g-4 justify-content-center" id="product-list">
                                 @foreach( $products as $product )
                                     <div class="col-md-6 col-lg-6 col-xl-4">
                                         <div class="rounded position-relative fruite-item">
@@ -180,7 +183,7 @@
                                     </div>
                                 @endforeach
                                 <div class="col-12">
-                                    <div class="pagination d-flex justify-content-center mt-5">
+                                    <div id="pagination-container" class="page-link d-flex justify-content-center mt-5">
                                         @if ($products->onFirstPage())
                                             <a href="#" class="rounded disabled">&laquo;</a>
                                         @else
@@ -253,7 +256,7 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            function fetchFilteredProducts() {
+            function fetchFilteredProducts(page = 1) {
                 let selectedCategories = [];
                 document.querySelectorAll(".category-checkbox:checked").forEach((checkbox) => {
                     selectedCategories.push(checkbox.value);
@@ -263,24 +266,113 @@
                 let filterPrice = document.getElementById("filter_price").value;
                 let minPrice = document.getElementById("range_input").value;
 
-                let url = "{{ route('customer.filterProducts') }}";
+                let url = `{{ route('customer.filterProducts') }}?page=${page}`;
 
                 fetch(url, {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                     },
                     body: JSON.stringify({
                         categories: selectedCategories,
                         search: searchQuery,
-                        filter_price: filterPrice,
-                        // min_price: minPrice
+                        sort_by: filterPrice,
+                        min_price: minPrice
                     })
                 })
-
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            renderProducts(data.products.data);
+                            renderPagination(data.products);
+                        } else {
+                            console.error("Lỗi:", data.error);
+                        }
+                    })
+                    .catch(error => console.error("Lỗi:", error));
             }
-        });
 
+            function renderProducts(products) {
+                let productList = document.querySelector("#product-list");
+                productList.innerHTML = "";
+
+                products.forEach(product => {
+                    let categoryName = product.category ? product.category.name : "Không có danh mục";
+                    let productItem = `
+                <div class="col-md-6 col-lg-6 col-xl-4">
+                    <div class="rounded position-relative fruite-item">
+                        <div class="fruite-img">
+                            <img src="${product.detail_image ?? ''}" class="img-fluid w-100 rounded-top" alt="">
+                        </div>
+                        <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">
+                            ${categoryName}
+                        </div>
+                        <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                            <h4>${product.name ?? ''}</h4>
+                            <p>${product.description ?? ''}</p>
+                            <div class="d-flex justify-content-between flex-lg-wrap">
+                                <p class="text-dark fs-5 fw-bold mb-0">${new Intl.NumberFormat().format(product.price)} VNĐ</p>
+                                <div class="d-flex">
+                                    <form action="{{ route('customer.addToCart') }}" method="post">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <button class="btn border border-secondary rounded-pill px-3 text-primary" type="submit">
+                                            <i class="fa fa-shopping-bag text-primary"></i>
+                                            <input type="hidden" name="product_id" value="${product.id}">
+                                        </button>
+                                    </form>
+                                    <a href="/customer/product-detail/${product.id}" class="btn border border-secondary rounded-pill px-3 text-secondary">
+                                        <i class="fa fa-eye text-secondary"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                    productList.innerHTML += productItem;
+                });
+            }
+
+            function renderPagination(paginationData) {
+                let paginationContainer = document.querySelector("#pagination-container");
+                paginationContainer.innerHTML = "";
+
+                if (paginationData.total > 9) {
+                    let paginationHTML = `<nav><ul class="pagination justify-content-center">`;
+
+                    if (paginationData.prev_page_url) {
+                        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${paginationData.current_page - 1}">&laquo;</a></li>`;
+                    }
+
+                    for (let i = 1; i <= paginationData.last_page; i++) {
+                        paginationHTML += `<li class="page-item ${paginationData.current_page === i ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>`;
+                    }
+
+                    if (paginationData.next_page_url) {
+                        paginationHTML += `<li class="page-item"><a class="page-link" href="#" data-page="${paginationData.current_page + 1}">&raquo;</a></li>`;
+                    }
+
+                    paginationHTML += `</ul></nav>`;
+                    paginationContainer.innerHTML = paginationHTML;
+
+                    document.querySelectorAll("#pagination-container .page-link").forEach(link => {
+                        link.addEventListener("click", function (e) {
+                            e.preventDefault();
+                            let page = this.getAttribute("data-page");
+                            fetchFilteredProducts(page);
+                        });
+                    });
+                }
+            }
+
+            document.getElementById("search_product").addEventListener("keyup", () => fetchFilteredProducts(1));
+            document.getElementById("range_input").addEventListener("input", () => fetchFilteredProducts(1));
+            document.getElementById("filter_price").addEventListener("change", () => fetchFilteredProducts(1));
+            document.querySelectorAll(".category-checkbox").forEach(checkbox => {
+                checkbox.addEventListener("change", () => fetchFilteredProducts(1));
+            });
+        });
     </script>
 @endsection

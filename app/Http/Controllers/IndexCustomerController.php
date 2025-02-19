@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\SendMail;
-use App\Models\User;
 use Exception;
+use App\Models\User;
 use App\Models\Cart;
 use App\Models\Order;
+use App\Mail\SendMail;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\OrderDetail;
@@ -14,10 +14,10 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Mail;
 
 class IndexCustomerController extends Controller
 {
@@ -148,7 +148,7 @@ class IndexCustomerController extends Controller
         }
 
         $cartItem->quantity = $request->quantity;
-        $cartItem->sub_total = $cartItem->quantity * $cartItem->product->price; // Cập nhật tổng giá
+        $cartItem->sub_total = $cartItem->quantity * $cartItem->product->price;
         $cartItem->save();
 
         return response()->json([
@@ -204,27 +204,28 @@ class IndexCustomerController extends Controller
         }
     }
 
-    public function filterProducts(Request $request): Factory|View|Application|RedirectResponse
+    public function filterProducts(Request $request): JsonResponse
     {
         try {
-            $query = Product::query();
-
-            if ($request->has('categories') && !empty($request->categories)) {
+            $query = Product::with('category');
+            if (!empty($request->categories) && $request->has('categories')) {
                 $query->whereIn('category_id', $request->categories);
             }
 
             if ($request->has('search') && !empty($request->search)) {
-                $query->where('name', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('description', 'LIKE', '%' . $request->search . '%')
-                    ->orWhere('tags', 'LIKE', '%' . $request->search . '%');
+                $query->where(function ($q) use ($request) {
+                    $q->where('name', 'LIKE', '%' . $request->search . '%')
+                        ->orWhere('description', 'LIKE', '%' . $request->search . '%')
+                        ->orWhere('tags', 'LIKE', '%' . $request->search . '%');
+                });
             }
 
-            if ($request->has('sort_by') && !empty($request->sort_by)) {
+            if (!empty($request->sort_by) && $request->has('sort_by')) {
                 if ($request->sort_by === 'asc') {
                     $query->orderBy('price');
                 } elseif ($request->sort_by === 'desc') {
                     $query->orderBy('price', 'desc');
-                } elseif ($request->sort_by === 'max') {
+                                                                        } elseif ($request->sort_by === 'max') {
                     $query->leftJoin('order_details', 'products.id', '=', 'order_details.product_id')
                         ->selectRaw('products.*, sum(order_details.quantity) as total_quantity')
                         ->groupBy('products.id')
@@ -232,13 +233,19 @@ class IndexCustomerController extends Controller
                 }
             }
 
-            $products = $query->paginate(9);
-            return view('shop.page.products', [
+            if (!empty($request->min_price) && $request->has('min_price')) {
+                $query->where('price', '>=', $request->min_price);
+            }
+            $products = $query->paginate(9)->appends($request->query());
+            return response()->json([
+                'success' => true,
                 'products' => $products
             ]);
-        }catch (Exception $e) {
-            return redirect()->route('customer.showProducts')->with('error', $e->getMessage());
+        } catch (Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
-
 }
