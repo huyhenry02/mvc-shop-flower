@@ -38,6 +38,7 @@ Route::group([
         Route::get('/create', [AdminProductController::class, 'showCreate'])->name('admin.product.showCreate');
         Route::get('/update/', [AdminProductController::class, 'showUpdate'])->name('admin.product.showUpdate');
         Route::get('/delete/{id}', [AdminProductController::class, 'getDelete'])->name('admin.product.getDelete');
+        Route::get('/search', [AdminProductController::class, 'searchProduct'])->name('admin.product.search');
 
         Route::post('/create', [AdminProductController::class, 'postCreate'])->name('admin.product.postCreate');
 
@@ -62,6 +63,7 @@ Route::group([
         Route::get('/create', [AdminOrderController::class, 'showCreate'])->name('admin.order.showCreate');
         Route::get('/update/{order}', [AdminOrderController::class, 'showUpdate'])->name('admin.order.showUpdate');
         Route::get('/detail/{order}', [AdminOrderController::class, 'showDetail'])->name('admin.order.showDetail');
+        Route::get('/search', [AdminOrderController::class, 'getSearch'])->name('admin.order.getSearch');
 
         Route::post('/create', [AdminOrderController::class, 'postCreate'])->name('admin.order.postCreate');
         Route::post('/update/{order}', [AdminOrderController::class, 'postUpdate'])->name('admin.order.postUpdate');

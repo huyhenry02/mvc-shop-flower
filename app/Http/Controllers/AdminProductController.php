@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Exception;
 use App\Models\Tag;
 use App\Models\Product;
@@ -18,9 +19,11 @@ class AdminProductController extends Controller
     public function showIndex(): View|Factory|Application
     {
         $products = Product::all();
+        $categories = Category::all();
         return view('admin.page.product.index',
             [
-                'products' => $products
+                'products' => $products,
+                'categories' => $categories
             ]);
     }
 
@@ -80,6 +83,24 @@ class AdminProductController extends Controller
             DB::rollBack();
             dd($e->getMessage());
         }
+    }
+
+    public function searchProduct(Request $request): View|Factory|Application
+    {
+        $queryInput = $request->input('queryInput');
+        $querySelectOption = $request->input('querySelectOption');
+        $products = Product::query();
+        if (!empty($querySelectOption)) {
+            $products->where('category_id', $querySelectOption);
+        }
+        if (!empty($queryInput)) {
+            $products->where(function ($query) use ($queryInput) {
+                $query->where('name', 'like', '%' . $queryInput . '%')
+                    ->orWhere('price', 'like', '%' . $queryInput . '%');
+            });
+        }
+        $products = $products->get();
+        return view('admin.page.product.search-results', compact('products'));
     }
 
     private function handleUploadFile($file, $model, $type): string
