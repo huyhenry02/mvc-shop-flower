@@ -36,7 +36,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach($products as $key => $product)
+                    @foreach( $products as $key => $product )
                         <tr>
                             <td>{{ $key + 1 }}</td>
                             <td>{{ $product->code ?? '' }}</td>
