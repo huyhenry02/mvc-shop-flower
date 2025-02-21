@@ -36,11 +36,12 @@ Route::group([
     ], function () {
         Route::get('/', [AdminProductController::class, 'showIndex'])->name('admin.product.showIndex');
         Route::get('/create', [AdminProductController::class, 'showCreate'])->name('admin.product.showCreate');
-        Route::get('/update/', [AdminProductController::class, 'showUpdate'])->name('admin.product.showUpdate');
+        Route::get('/update/{product}', [AdminProductController::class, 'showUpdate'])->name('admin.product.showUpdate');
         Route::get('/delete/{id}', [AdminProductController::class, 'getDelete'])->name('admin.product.getDelete');
         Route::get('/search', [AdminProductController::class, 'searchProduct'])->name('admin.product.search');
 
         Route::post('/create', [AdminProductController::class, 'postCreate'])->name('admin.product.postCreate');
+        Route::post('/update/{product}', [AdminProductController::class, 'postUpdate'])->name('admin.product.postUpdate');
 
     });
 

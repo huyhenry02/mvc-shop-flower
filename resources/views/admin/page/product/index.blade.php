@@ -12,9 +12,9 @@
                     class="form-control search-input w-25"
                     id="search-input"
                 />
-                <div class="input-group">
+                <div class="input-group ms-2 w-25">
                     <select class="form-select" id="categories-id" name="category_id">
-                        <option value="" selected>Loại sản phẩm</option>
+                        <option value="" selected>Chọn loại sản phẩm</option>
                         @foreach($categories as $category)
                             <option id="category-id" value="{{$category->id}}">{{$category->name}}</option>
                         @endforeach
@@ -63,7 +63,7 @@
                                    class="btn btn-sm btn-secondary">
                                     <i class="fas fa-eye"></i>
                                 </a>
-                                <a href="#"
+                                <a href="{{ route('admin.product.showUpdate', $product->id) }}"
                                    class="btn btn-sm btn-primary">
                                     <i class="fas fa-edit"></i>
                                 </a>
