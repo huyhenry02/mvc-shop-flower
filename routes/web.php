@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminUserController;
@@ -21,9 +22,9 @@ Route::group([
     Route::post('/login', [AuthController::class, 'postLogin'])->name('auth.postLogin');
     Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout')->middleware('auth');
 });
-Route::group([
-    'prefix' => 'admin',
-], function () {
+Route::middleware(['auth', 'checkRole:admin'])
+    ->prefix('admin')
+    ->group(function () {
     Route::group([
         'prefix' => 'user'
     ], function () {
@@ -71,20 +72,19 @@ Route::group([
         Route::post('/update-status/{order}', [AdminOrderController::class, 'updateStatus'])->name('admin.order.updateStatus');
     });
 });
-Route::group([
-    'prefix' => 'customer'
-], function () {
+Route::prefix('customer')
+    ->group(function () {
     Route::get('/', [IndexCustomerController::class, 'showIndex'])->name('customer.showIndex');
     Route::get('/products', [IndexCustomerController::class, 'showProducts'])->name('customer.showProducts');
     Route::get('/product-detail/{product}', [IndexCustomerController::class, 'showProductDetail'])->name('customer.showProductDetail');
-    Route::get('/cart', [IndexCustomerController::class, 'showCart'])->name('customer.showCart');
-    Route::get('/checkout', [IndexCustomerController::class, 'showCheckout'])->name('customer.showCheckout');
+    Route::get('/cart', [IndexCustomerController::class, 'showCart'])->name('customer.showCart')->middleware('auth');
+    Route::get('/checkout', [IndexCustomerController::class, 'showCheckout'])->name('customer.showCheckout')->middleware('auth');
     Route::get('/contact', [IndexCustomerController::class, 'showContact'])->name('customer.showContact');
-    Route::get('/your-order', [IndexCustomerController::class, 'showYourOrder'])->name('customer.showYourOrder');
+    Route::get('/your-order', [IndexCustomerController::class, 'showYourOrder'])->name('customer.showYourOrder')->middleware('auth');
 
-    Route::post('/add-to-cart', [IndexCustomerController::class, 'addToCart'])->name('customer.addToCart');
-    Route::get('/remove-cart-item/{cart}', [IndexCustomerController::class, 'removeCartItem'])->name('customer.removeCartItem');
-    Route::post('/update-quantity', [IndexCustomerController::class, 'updateQuantity'])->name('customer.updateQuantity');
-    Route::post('/checkout', [IndexCustomerController::class, 'postCheckout'])->name('customer.postCheckout');
-    Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts');
+    Route::post('/add-to-cart', [IndexCustomerController::class, 'addToCart'])->name('customer.addToCart')->middleware('auth');
+    Route::get('/remove-cart-item/{cart}', [IndexCustomerController::class, 'removeCartItem'])->name('customer.removeCartItem')->middleware('auth');
+    Route::post('/update-quantity', [IndexCustomerController::class, 'updateQuantity'])->name('customer.updateQuantity')->middleware('auth');
+    Route::post('/checkout', [IndexCustomerController::class, 'postCheckout'])->name('customer.postCheckout')->middleware('auth');
+    Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts')->middleware('auth');
 });

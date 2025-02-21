@@ -2,10 +2,9 @@
 @section('content')
     <!-- Single Page Header start -->
     <div class="container-fluid page-header py-5">
-        <h1 class="text-center text-white display-6">404 Error</h1>
+        <h1 class="text-center text-white display-6">Lỗi 404</h1>
         <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Pages</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.showIndex') }}">Trang chủ</a></li>
             <li class="breadcrumb-item active text-white">404</li>
         </ol>
     </div>
@@ -17,9 +16,9 @@
                 <div class="col-lg-6">
                     <i class="bi bi-exclamation-triangle display-1 text-secondary"></i>
                     <h1 class="display-1">404</h1>
-                    <h1 class="mb-4">Page Not Found</h1>
-                    <p class="mb-4">We’re sorry, the page you have looked for does not exist in our website! Maybe go to our home page or try to use a search?</p>
-                    <a class="btn border-secondary rounded-pill py-3 px-5" href="index.html">Go Back To Home</a>
+                    <h1 class="mb-4">Trang không tìm thấy</h1>
+                    <p class="mb-4">Rất tiếc, trang bạn đang tìm kiếm không tồn tại trên trang web của chúng tôi! Có thể bạn hãy vào trang chủ của chúng tôi hoặc thử sử dụng chức năng tìm kiếm?</p>
+                    <a class="btn border-secondary rounded-pill py-3 px-5" href="{{ route('customer.showIndex') }}">Quay về trang chủ</a>
                 </div>
             </div>
         </div>
