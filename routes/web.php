@@ -86,5 +86,5 @@ Route::prefix('customer')
     Route::get('/remove-cart-item/{cart}', [IndexCustomerController::class, 'removeCartItem'])->name('customer.removeCartItem')->middleware('auth');
     Route::post('/update-quantity', [IndexCustomerController::class, 'updateQuantity'])->name('customer.updateQuantity')->middleware('auth');
     Route::post('/checkout', [IndexCustomerController::class, 'postCheckout'])->name('customer.postCheckout')->middleware('auth');
-    Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts')->middleware('auth');
+    Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts');
 });

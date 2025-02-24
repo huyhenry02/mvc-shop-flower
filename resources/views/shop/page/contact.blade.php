@@ -4,9 +4,8 @@
     <div class="container-fluid page-header py-5">
         <h1 class="text-center text-white display-6">Liên lạc</h1>
         <ol class="breadcrumb justify-content-center mb-0">
-            <li class="breadcrumb-item"><a href="{{ route('customer.showIndex') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="#">Pages</a></li>
-            <li class="breadcrumb-item active text-white">Contact</li>
+            <li class="breadcrumb-item"><a href="{{ route('customer.showIndex') }}">Trang chủ</a></li>
+            <li class="breadcrumb-item active text-white">Liên lạc</li>
         </ol>
     </div>
     <!-- Single Page Header End -->
