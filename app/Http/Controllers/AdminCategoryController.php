@@ -80,4 +80,22 @@ class AdminCategoryController extends Controller
             return redirect()->back()->with('error', 'Có lỗi xảy ra');
         }
     }
+
+    public function search(Request $request)
+    {
+//        DB::beginTransaction();
+        try {
+            $query = $request->input('query');
+            $categories = Category::where('name', 'like', "%".$query."%")
+                ->orWhere('description', 'like', "%".$query."%")
+                ->get();
+            DB::commit();
+            return view('admin.page.category.search-results',compact('categories'));
+        } catch (Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Có lỗi xảy ra');
+        }
+    }
+
+
 }

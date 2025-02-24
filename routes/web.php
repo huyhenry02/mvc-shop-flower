@@ -52,6 +52,7 @@ Route::middleware(['auth', 'checkRole:admin'])
         Route::get('/', [AdminCategoryController::class, 'showIndex'])->name('admin.category.showIndex');
         Route::get('/create', [AdminCategoryController::class, 'showCreate'])->name('admin.category.showCreate');
         Route::get('/update/{category}', [AdminCategoryController::class, 'showUpdate'])->name('admin.category.showUpdate');
+        Route::get('/search', [AdminCategoryController::class, 'search'])->name('admin.category.search');
 
         Route::post('/create', [AdminCategoryController::class, 'postCreate'])->name('admin.category.postCreate');
         Route::post('/update/{category}', [AdminCategoryController::class, 'postUpdate'])->name('admin.category.postUpdate');

@@ -5,6 +5,12 @@
     >
         <div class="w-100">
             <h3 class="fw-bold mb-3">Danh sách danh mục</h3>
+            <input
+                type="text"
+                placeholder="Tìm kiếm danh mục"
+                class="form-control search-input w-25"
+                id="search-input"
+            />
         </div>
         <div class="ms-md-auto py-2 py-md-0">
         </div>
@@ -51,4 +57,26 @@
             }
         }
     </script>
+    <script>
+        $(document).ready({
+            function (){
+                $('search-input').on('change keyup', function(){
+                    var query = $('search-input').val();
+                    $.ajax({
+                        url : '{{route('admin.category.search')}}',
+                        method: 'GET',
+                        data : {query : query},
+                        Success: function(response){
+                            $('#category-table tbody').html(response);
+                        },
+                        error: function (error){
+                            console.error('AJAX Error:', error);
+                        }
+                    })
+
+                });
+            }
+        })
+    </script>
+
 @endsection
