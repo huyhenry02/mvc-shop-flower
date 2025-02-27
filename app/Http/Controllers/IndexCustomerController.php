@@ -248,4 +248,9 @@ class IndexCustomerController extends Controller
             ], 500);
         }
     }
+
+    public function postReview()
+    {
+
+    }
 }

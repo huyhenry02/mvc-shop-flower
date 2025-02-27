@@ -126,15 +126,15 @@
                         <form action="#">
                             <h4 class="mb-5 fw-bold">Để lại đánh giá của bạn</h4>
                             <div class="row g-4">
-                                <div class="col-lg-6">
-                                    <div class="border-bottom rounded">
-                                        <input type="text" class="form-control border-0 me-4"
-                                               placeholder="Tên của bạn *">
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="border-bottom rounded">
-                                        <input type="text" class="form-control border-0" placeholder="Số điện thoại *">
+                                <div class="col-lg-12">
+                                    <label class="form-label">Đánh giá:</label>
+                                    <div class="rating">
+                                        <input type="hidden" name="rating" id="rating-value" value="0">
+                                        <i class="fas fa-star" data-value="1"></i>
+                                        <i class="fas fa-star" data-value="2"></i>
+                                        <i class="fas fa-star" data-value="3"></i>
+                                        <i class="fas fa-star" data-value="4"></i>
+                                        <i class="fas fa-star" data-value="5"></i>
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -198,8 +198,37 @@
             </div>
         </div>
     </div>
+    <style>
+        .rating {
+            display: flex;
+            gap: 5px;
+            cursor: pointer;
+        }
+        .rating i {
+            font-size: 24px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+        .rating i.active,
+        .rating i:hover ~ i {
+            color: #ffc107;
+        }
+    </style>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.querySelectorAll('.rating i').forEach(star => {
+            star.addEventListener('click', function() {
+                document.getElementById('rating-value').value = this.getAttribute('data-value');
+
+                document.querySelectorAll('.rating i').forEach(s => s.classList.remove('active'));
+                this.classList.add('active');
+                let prev = this.previousElementSibling;
+                while (prev) {
+                    prev.classList.add('active');
+                    prev = prev.previousElementSibling;
+                }
+            });
+        });
         function changeImage(element) {
             document.getElementById('mainImage').src = element.src;
         }

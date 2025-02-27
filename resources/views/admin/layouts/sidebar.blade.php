@@ -100,6 +100,27 @@
                     </ul>
                 </div>
             </li>
+            <li class="nav-item">
+                <a
+                    data-bs-toggle="collapse"
+                    href="#review"
+                    class="collapsed"
+                    aria-expanded="false"
+                >
+                    <i class="fas fa-bars"></i>
+                    <p>Quản lý đánh giá</p>
+                    <span class="caret"></span>
+                </a>
+                <div class="collapse show" id="review">
+                    <ul class="nav nav-collapse">
+                        <li class="">
+                            <a href="{{ route('admin.review.showIndex') }}">
+                                <span class="sub-item">Danh sách đánh giá</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
         </ul>
     </div>
 </div>

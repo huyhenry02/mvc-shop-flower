@@ -81,6 +81,22 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
         });
+
+        // Carts table
+        Schema::create('reviews', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('product_id');
+            $table->integer('number_star');
+            $table->text('content');
+            $table->unsignedBigInteger('parent_id')->nullable();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('parent_id')->references('id')->on('reviews')->onDelete('cascade');
+        });
+
     }
 
     /**
@@ -88,6 +104,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('reviews');
         Schema::dropIfExists('carts');
         Schema::dropIfExists('order_details');
         Schema::dropIfExists('orders');

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminReviewController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -72,6 +73,12 @@ Route::middleware(['auth', 'checkRole:admin'])
         Route::post('/update/{order}', [AdminOrderController::class, 'postUpdate'])->name('admin.order.postUpdate');
         Route::post('/update-status/{order}', [AdminOrderController::class, 'updateStatus'])->name('admin.order.updateStatus');
     });
+
+    Route::group([
+        'prefix' => 'review'
+    ], function () {
+        Route::get('/', [AdminReviewController::class, 'showIndex'])->name('admin.review.showIndex');
+    });
 });
 Route::prefix('customer')
     ->group(function () {
@@ -88,4 +95,5 @@ Route::prefix('customer')
     Route::post('/update-quantity', [IndexCustomerController::class, 'updateQuantity'])->name('customer.updateQuantity')->middleware('auth');
     Route::post('/checkout', [IndexCustomerController::class, 'postCheckout'])->name('customer.postCheckout')->middleware('auth');
     Route::post('/filter-products', [IndexCustomerController::class, 'filterProducts'])->name('customer.filterProducts');
+    Route::post('/review', [IndexCustomerController::class, 'postReview'])->name('customer.review')->middleware('auth');
 });
