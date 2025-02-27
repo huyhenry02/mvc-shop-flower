@@ -110,6 +110,9 @@
                                         </div>
                                     </div>
                                 @endforeach
+                                <div class="col-12">
+                                   <button type="button" class="btn btn-outline-primary btn-add">+</button>
+                                </div>
                             </div>
                         </div>
                     </div>
